@@ -1,0 +1,51 @@
+Content-Type: multipart/mixed; boundary="==4be51ec25fe4b37d230d91a14d542a03=="
+
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: _design/list_posts
+Content-Length: 271
+Content-Type: application/json
+
+{"_id":"_design\/list_posts","_rev":"1-c0cef7eea580e2d86ff3ee99cc89a9c0","revisions":[],"language":"javascript","views":{"posts":{"map":"function( doc )\n\t{\n\t\tif ( doc.type == \"post\" )\n\t\t{\n\t\t\temit(Date.parse(doc.created), doc);\n\t\t}\n\t}"}},"type":"_view"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: _design/users
+Content-Length: 568
+Content-Type: application/json
+
+{"_id":"_design\/users","_rev":"1-7921d26d03a2d20f887ddfe84fc780c8","revisions":[],"language":"javascript","views":{"all":{"map":"function( doc )\n{\n    if ( doc.type == \"user\" )\n    {\n        emit( null, doc._id );\n    }\n}"},"byLogin":{"map":"function( doc )\n{\n    if ( doc.type == \"user\" )\n    {\n        emit( doc.login, doc );\n    }\n}"},"unregistered":{"map":"function( doc )\n{\n    if ( doc.type == \"user\" &&\n         doc.valid !== \"0\" &&\n         doc.valid !== \"1\" )\n    {\n        emit( doc.valid, doc._id );\n    }\n}"}},"type":"_view"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: post-hallo_welt
+Content-Length: 788
+Content-Type: application/json
+
+{"_id":"post-hallo_welt","_rev":"1-14e8fd924184f4ac833b0330b2397f22","revisions":[],"title":"Hallo Welt","text":"<span class=\"excerpt\">This is a meaningless excerpt unnecessary and wasted.<\/span>\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n","created":"Wed, 15 Sep 2010 13:13:36 +0200","comments":null,"tags":["init","go","hello-world"],"author":null,"publish":true,"type":"post"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: user-admin
+Content-Length: 269
+Content-Type: application/json
+
+{"_id":"user-admin","_rev":"3-daa2252218c4bff5849ec3584ecd0f19","revisions":[],"login":"admin","email":"admin@example.org","name":"Admin","password":"a2822a896f1848554c95ebf0fccad4c044fe453c","description":null,"created":"Thu, 02 Sep 2010 17:02:00 +0200","type":"user"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: wst.schreibmaschine.blog-configuration
+Content-Length: 408
+Content-Type: application/json
+
+{"_id":"wst.schreibmaschine.blog-configuration","_rev":"17-17b3e9fc3f2b84bb4187a87a9de95344","revisions":[],"type":"wst.schreibmaschine.blog","defaultTheme":"standard","currentTheme":"standard","plugins":["markdown","widgets"],"articlesPerPage":2,"blogTitle":"Schreibmaschine","blogDescription":"These are some words about the blog and its mission.","blogOwner":"user-admin","blogKeywords":"schreibmaschine"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: wst.schreibmaschine.plugin-datastore-google-analytics
+Content-Length: 273
+Content-Type: application/json
+
+{"_id":"wst.schreibmaschine.plugin-datastore-google-analytics","_rev":"3-a258cada1b68e012559cb7aa783cfae2","revisions":[],"name":"google-analytics","created":"Thu, 02 Sep 2010 18:20:03 +0200","data":{"account":"UA-18327779-1"},"type":"wst.schreibmaschine.plugin-datastore"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: wst.schreibmaschine.plugin-datastore-retweet-this
+Content-Length: 271
+Content-Type: application/json
+
+{"_id":"wst.schreibmaschine.plugin-datastore-retweet-this","_rev":"3-0d476faf2a37de809013c7e0062b5fcc","revisions":[],"name":"retweet-this","created":"Mon, 30 Aug 2010 16:16:30 +0200","data":{"account":"@somethingsomething"},"type":"wst.schreibmaschine.plugin-datastore"}
+--==4be51ec25fe4b37d230d91a14d542a03==
+Content-ID: wst.schreibmaschine.plugin-datastore-widgets
+Content-Length: 293
+Content-Type: application/json
+
+{"_id":"wst.schreibmaschine.plugin-datastore-widgets","_rev":"2-824980985976cea7917b73b0e3bc4dd4","revisions":[],"name":"widgets","created":"Mon, 30 Aug 2010 16:16:09 +0200","data":{"sidebar":"I am the description about the author and the blog."},"type":"wst.schreibmaschine.plugin-datastore"}
+--==4be51ec25fe4b37d230d91a14d542a03==--

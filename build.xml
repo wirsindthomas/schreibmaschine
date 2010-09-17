@@ -1,0 +1,81 @@
+<?xml version="1.0"  encoding="UTF-8" ?>
+
+<project name="js-handyshop" basedir="." default="main">
+    <property file="./build.properties" />
+
+    <property name="package"  value="${phing.project.name}" override="true" />
+    <property name="builddir" value="./build" override="true" />
+    <property name="srcdir"   value="${project.basedir}/src" override="true" />
+
+    <!-- Fileset for all source files -->
+    <fileset dir="./src" id="sourcefiles">
+        <include name="**" />
+    </fileset>
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT) Target: main                        -->
+    <!-- ============================================  -->
+    <target name="main" depends="clean" description="main target">
+		<mkdir dir="${builddir}" />
+        <copy todir="${builddir}">
+            <fileset refid="sourcefiles" />
+        </copy>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: Rebuild                               -->
+    <!-- ============================================  -->
+    <target name="rebuild" description="rebuilds this package">
+        <delete dir="${builddir}" />
+        <phingcall target="main" />
+    </target>
+
+    <!-- ============================================  -->
+    <!--  Target: dist                       --> 
+    <!-- ============================================  -->
+    <target name="dist" depends="main">
+        <echo msg="Creating archive..." />
+
+        <tar destfile="${phing.project.name}/${phing.project.name}.tar.gz" compression="gzip">
+            <fileset dir="./build">
+                <include name="*" />
+            </fileset>
+        </tar>
+
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+
+    <!-- ============================================  -->
+    <!--  Target: deploy                       --> 
+    <!-- ============================================  -->
+    <target name="deploy" depends="main">
+        <echo msg="Deploying build files ..." />
+
+		<!-- <ftpdeploy 
+		  host="" 
+		  port="21" 
+		  username="" 
+		  password=""
+		  dir="/html/import" 
+		  mode="binary"
+		  clearfirst="true">
+		  <fileset dir="./build">
+		    <include name="*"/>
+		    <exclude name=".git"/>
+		  </fileset>
+		</ftpdeploy> -->
+
+        <echo msg="Files copied and deployed on Server." />
+    </target>
+
+    <!-- ============================================  -->
+    <!--  Target: clean                       --> 
+    <!-- ============================================  -->
+    <target name="clean">
+        <echo msg="Deleting build dir..." />
+
+		<delete dir="${builddir}" includeemptydirs="true" verbose="false" failonerror="true" />
+		
+        <echo msg="Build dir is deleted." />
+    </target>
+</project>

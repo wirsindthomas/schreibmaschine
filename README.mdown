@@ -1,0 +1,76 @@
+# `Schreibmaschine` #
+
+`Schreibmaschine` (german for typewriter) is blogging engine written in PHP 5.3 and based on Zend Framework 2 using CouchDB as a storage engine and PHPillow as an abstraction layer for accessing the database.
+
+The main idea behind writing another blogging tool is to have a strictly object oriented core which does not make you feel bad about being a PHP developer and which is based on a well-known framework. These aspects hopefully help to make it easier for developers to adapt and extend the system.
+
+So basically `Schreibmaschine` is nothing but a _Zend Application_ with only few renamed and replaced folders.
+
+Currently `Schreibmaschine` incorporates the following features:
+
+- it is themable using _Zend Layout_ and _Zend View_
+- it is extendable through a plugin API
+- RSS and Atom feeds are generated
+- it implements the *MetaWeblog API* for creating, editing and deleting posts using tools like Mars Edit, Ecto or TextMate.
+- it has something like a rudimentary author/user management
+
+## Current State ##
+
+The software is definitely not ready for a release. I wrote a first draft and am now looking for feedback to see if it is worth it to keep going and maybe even excite other developers to get onboard. Let's call the current state __pre-alpha 0.1 - RFC__.
+
+## Installation ##
+
+As blogs are often hosted in a shared hosting environment `Schreibmaschine` is desingned to only need one folder within document root. This means nothing but having moved the application and library folders of a _Zend Application_ into the public folder.
+
+Future releases are planned to use signed phar archives for delivering the core and the library as this would give us a solid upgrade strategy. Unfortunately this is not implemented yet so the whole application can be found in `src/public`.
+
+
+1. copy the content of `src/public` onto your webserver.
+2. edit the application configuration which is located in `src/public/config`. This is a normal *Zend Config Ini* file and you need at least to set up a database connection and the base URL.
+3. set the `env` variable in the .htaccess file 
+4. import the database dump located in `res/schreibmaschine.db.dump` using the couchdb-load script located in `src/public/library/Phpillow/scripts`. The command might look something like this:
+
+    $>/path/to/couchdb-load -u USERNAME -p PASSWORD --input /path/to/res/schreibmaschine.db.dump http://urlofcouchdbserver:5984/name-of-your-database
+
+5. make sure that `src/public/application/logs` is writable by the webserver
+
+## Some words about the database structure ##
+
+CouchDb is a document based database which means that it has a flat structure. There are no (obviously) tables but different documents which are  distinguished by their type attribute.
+
+### `wst.schreibmaschine.blog-configuration` ###
+
+While configuration of the application itself is done through the config file all blog related configurations are stored in the database. There is a configuration document which has the id `wst.schreibmaschine.blog-configuration`. Use this to store the title of the blog, the owner (id of the user document), the main description and so on.
+
+### `user` ###
+
+This is the document type for users/authors.
+
+### `post` ###
+
+This type of document is for storing a blog post in the database. Please note that comments and tags are sub documents stored as arrays within each post!
+
+### `wst.schreibmaschine.plugin-datastore` ###
+
+This document type implements a key-value datastore for plugins and view helpers
+
+## Themes ##
+
+Themes are stored in `src/public/themes`. Each theme consists of an uniquely named folder and has the following structure:
+
+- *Layouts*: Zend Layout files (currently only one is used but this might be enhanced)
+- *Views*: Zend View files
+- *Helpers*: Zend View Helper Classes. Each theme has its own Zend View Helper namespace and can therefore have any number of theme related plugins (which means no more functions.php files!)
+
+## Plugins ##
+
+Plugins are stored in `src/public/themes`. They are thought of as view helpers which are available for all themes. This means that theme view helpers and plugins are basically the same.
+
+Unlike theme view helpers plugins must be registered. This happens by storing the unique name of the plugin (which is the name of the folder) into the `wst.schreibmaschine.blog-configuration` file under plugins. Every plugin that is listed here is registered as a view helper namespace. So that each plugin can consist of any number of *Plugin Classes*. 
+
+### Plugin Classes ###
+
+Plugin Classes are nothing but extended Zend View Helper classes. Each class must extend the abstract Plugin Class `WST\Schreibmaschine\View\Helpers\AbstractHelper` which allows the class to read/write access its own key-value datastore (which hopefully means an end to the wp_config mess).
+
+As Plugin Classes are Zend View Helpers they may access the view object and modify it for example by injecting additional meta headers.
+

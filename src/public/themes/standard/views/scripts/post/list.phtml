@@ -1,0 +1,34 @@
+<?php foreach ($this->posts->rows as $post): ?>
+    <article id="post-<?php echo $post['id'] ?>" class="list">
+        <time datetime="<?php echo $post['value']['created'] ?>"><?php echo $this->formatDate($post['value']['created']) ?></time>
+        <header>
+            <h4><a href="<?php echo $this->baseUrl('/post/show/id/' . $post['id']) ?>" rel="permalink" class="title show-details"><?php echo $this->escape($post['value']['title']) ?></a></h4>
+        </header>
+        <div class="text-body">
+        <?php echo $this->markdownParser($post['value']['text']) ?>
+    </div>
+    <footer>
+        <div class="article-footer">
+            <?php if (isset($post['value']['tags'])): ?>
+                <ul class="tags">
+                    <li><?php echo implode("</li>\n<li>", $post['value']['tags']) ?></li>
+                </ul>
+            <?php endif; ?>
+            <?php
+                echo $this->retweetThis($post['value']['title'],
+                        $this->baseUrl('/post/show/id/' . $post['id']),
+                        array('class' => 'retweet right'))
+            ?>
+            </div>
+        </footer>
+    </article>
+
+    <?php endforeach; ?>
+            <div class="pager">
+    <?php if ($this->previousPage > 0): ?>
+                    <p class="left"><a href="<?php echo $this->baseUrl('/post/list/page/' . $this->previousPage) ?>">zurück</a></p>
+<?php endif; ?>
+    <?php if (isset($this->nextPage)): ?>
+                        <p class="right"><a href="<?php echo $this->baseUrl('/post/list/page/' . $this->nextPage) ?>">vor</a></p>
+<?php endif; ?>
+</div>

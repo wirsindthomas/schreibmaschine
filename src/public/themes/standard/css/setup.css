@@ -1,0 +1,73 @@
+div#container{
+	margin:5px auto;
+	width:960px;
+/*	border:1px solid #bababa;*/
+}
+header.main{
+	margin-top:15px;
+	text-align:center;
+}
+header.main h1{
+	font-size:44px;
+	color:#444;	
+}
+header.main .byline{
+	font-size:18px;
+	font-style:oblique;
+	color:#919191;
+}
+div#main{
+	margin-top:50px;
+	float:left;
+	width:630px;
+}
+
+div#main div.pager{
+	padding-top:15px;
+	clear:both;
+}
+article{
+	margin-bottom:50px;
+	clear:both;
+}
+article time{
+	font-style:oblique;
+	color:#BABABA;
+	font-size:12px;
+}
+article header{
+	margin-bottom:5px;
+}
+article header h4{
+	font-size:24px;
+}
+article p{
+	
+}
+article footer{
+	margin-top:5px;
+	padding-top:5px;
+	border-top:1px solid #BABABA;
+	font-style:oblique;
+	color:#BABABA;
+	font-size:12px;
+}
+article footer ul{
+float:right;
+	margin:0 3px;
+}
+article footer ul li{
+	list-style:none;
+	float:left;
+	margin-right:10px;
+}
+aside{
+	margin-top:50px;
+	margin-left:700px;
+	width:210px;
+	text-align:justify;
+}
+footer.main{
+	padding-top:40px;
+	clear:both;
+}

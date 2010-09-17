@@ -1,0 +1,29 @@
+
+<article id="post-<?php echo $this->post->_id ?>" class="detail">
+    <time datetime="<?php echo $this->post->created ?>"><?php echo $this->formatDate($this->post->created) ?></time>
+    <header>
+        <h4>
+            <a href="<?php echo $this->baseUrl('/post/show/id/' . $this->post->_id) ?>" rel="permalink">
+                <?php echo $this->escape($this->post->title) ?>
+            </a>
+        </h4>
+    </header>
+   <?php echo $this->markdownParser($this->post->text) ?>
+    <footer>
+        <div class="article-footer">
+            <?php if (isset($this->post->tags)): ?>
+                <ul class="tags">
+                    <li><?php echo implode("</li>\n<li>", $this->post->tags) ?></li>
+                </ul>
+            <?php endif; ?>
+            <?php
+                echo $this->retweetThis($this->post->title,
+                        $this->baseUrl('/post/show/id/' . $this->post->_id),
+                        array('class' => 'retweet right'))
+            ?>
+            </div>
+    </footer>
+</article>
+<div class="pager">
+    <p class="left"><a href="<?php echo $this->baseUrl('/post/list#post-'.$this->post->_id) ?>">zurück</a></p>
+</div>

@@ -26,9 +26,8 @@ use WST\Schreibmaschine\Model as Model;
 require_once APPLICATION_PATH . '/models/Post.php';
 
 /**
- * Service class implementing the Metaweblog API
+ * Service class implementing the MetaWeblog API
  *
- * @see        http://www.xmlrpc.com/metaWeblogApi
  * @category   Schreibmaschine
  * @package    WST\Schreibmaschine\Service
  * @copyright  Copyright (c) 2010 Alexander Thomas (at@wirsindthomas.com)
@@ -37,15 +36,12 @@ require_once APPLICATION_PATH . '/models/Post.php';
 class Metaweblog {
 
     /**
-     * Makes a new post to a designated blog. Optionally, will publish the blog after making the post.
-     *
      * @param string $blogid
      * @param string $username
      * @param string $password
      * @param struct $struct
      * @param boolean $publish
      * @return string
-     * @todo Password is not veryfied yet!
      */
     public function newPost($blogid, $username, $password, $struct, $publish) {
 
@@ -70,6 +66,7 @@ class Metaweblog {
         $doc->title = $struct['title'];
         $doc->text = $struct['description'] . PHP_EOL . $struct['mt_text_more'];
         $doc->created = date('r');
+	$doc->author = $user->rows[0]['id'];
 
         if (isset($struct['mt_tags'])) {
             $tagsArray = explode(',', $struct['mt_tags']);
@@ -97,15 +94,12 @@ class Metaweblog {
     }
 
     /**
-     * Edits a given post. Optionally, will publish the blog after making the edit.
-     *
      * @param string $postid
      * @param string $username
      * @param string $password
      * @param struct $struct
      * @param boolean $publish
      * @return string
-     * @todo Password is not veryfied yet!
      */
     public function editPost($postid, $username, $password, $struct, $publish) {
 
@@ -133,6 +127,7 @@ class Metaweblog {
         $doc->title = $struct['title'];
         $doc->text = $struct['description'] . PHP_EOL . $struct['mt_text_more'];
         $doc->created = isset($struct['date']) ? $struct['date'] : \date('r');
+        $doc->author = $user->rows[0]['id'];
 
         if (isset($struct['mt_tags'])) {
             $tagsArray = explode(',', $struct['mt_tags']);
@@ -160,13 +155,10 @@ class Metaweblog {
     }
 
     /**
-     * Returns a struct containing all informations about the requested post
-     *
      * @param string $postid
      * @param string $username
      * @param string $password
      * @return struct
-     * @todo Password is not veryfied yet!
      */
     public function getPost($postid, $username, $password) {
 
@@ -193,7 +185,7 @@ class Metaweblog {
         $date = new \Zend\Date\Date($doc->created);
 
         $post = array(
-            'userId' => 1,
+            'userId' => $user->rows[0]['id'],
             'dateCreated' => $date,
             'title' => $doc->title,
             'content' => $doc->text,
@@ -205,16 +197,11 @@ class Metaweblog {
     }
 
     /**
-     * Returns array of structs.
-     * Each struct represents a recent weblog post, containing the same information
-     * that a call to metaWeblog.getPost would return.
-     *
      * @param string $blogid
      * @param string $username
      * @param string $password
      * @param int $numberOfPosts
      * @return struct
-     * @todo Password is not veryfied yet!
      */
     public function getRecentPosts($blogid, $username, $password, $numberOfPosts) {
 
@@ -254,7 +241,7 @@ class Metaweblog {
                 $date = new \Zend\Date\Date($post['value']['created']);
 
                 $post = array(
-                    'userId' => 1,
+                    'userId' => $user->rows[0]['id'],
                     'dateCreated' => $date,
                     'title' => $post['value']['title'],
                     'description' => $post['value']['text'],
@@ -269,15 +256,11 @@ class Metaweblog {
     }
 
     /**
-     * The struct returned contains one struct for each category,
-     * containing the following elements: description, htmlUrl and rssUrl.
-     *
+     * @todo There are no Categories so this method is just a stub.
      * @param string $blogid
      * @param string $username
      * @param string $password
      * @return struct
-     * @todo Contains only dummy data as Schreibmaschine does not have categories
-     * @todo Password is not veryfied yet!
      */
     public function getCategories($blogid, $username, $password) {
 
@@ -296,8 +279,10 @@ class Metaweblog {
             return false;
         }
 
-        $log = \Zend\Registry::get('log');
-        $log->info(print_r(func_get_args(), 1));
+        /**
+         * @todo This is a stub
+         */
+
         $categories = array(
             array('title' => 'test',
                 'description' => 'test',
@@ -311,9 +296,34 @@ class Metaweblog {
 
     /**
      * @todo not implemented!
+     * @param <type> $blogid
+     * @param <type> $username
+     * @param <type> $password
+     * @param <type> $struct
      */
     public function newMediaObject($blogid, $username, $password, $struct) {
-        return false;
+
+        //Set params for calling the CouchDb View
+        $findUserByIdParams = array(
+            'limit' => 1,
+            'key' => $username);
+        /**
+         * @todo Loader
+         */
+        require_once APPLICATION_PATH . '/models/views/User.php';
+        $user = Model\View\User::byLogin($findUserByIdParams);
+
+        if ($user->rows[0]['id'] == '') {
+
+            return false;
+        }
+
+        /**
+         * @todo Implement me!
+         */
+
+        $log = \Zend\Registry::get('log');
+        $log->info(print_r(func_get_args(), 1));
     }
 
 }
